@@ -1,3 +1,4 @@
+mod utils;
 mod day01;
 
 use std::env;
