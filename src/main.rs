@@ -1,5 +1,6 @@
 mod utils;
 mod day01;
+mod day02;
 
 use std::env;
 
@@ -16,6 +17,7 @@ fn main() {
     match (day.as_str(), part.as_str()) {
         ("1", "1") => day01::run_part1(),
         ("1", "2") => day01::run_part2(),
+        ("2", "1") => day02::run_part1(),
         // Keep adding days
         _ => println!("Invalid day or part: {} {}", day, part),
     }
