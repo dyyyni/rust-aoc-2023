@@ -3,9 +3,9 @@ use crate::utils::read_lines;
 
 #[derive(Debug)]
 struct GameLimits {
-    red_cubes: u16,
-    green_cubes: u16,
-    blue_cubes: u16,
+    red_cubes: u32,
+    green_cubes: u32,
+    blue_cubes: u32,
 }
 
 const GAME_LIMITS: GameLimits = GameLimits {
@@ -21,9 +21,9 @@ struct CubeGame {
 
 #[derive(Debug)]
 struct Subset {
-    red_cubes: u16,
-    green_cubes: u16,
-    blue_cubes: u16,
+    red_cubes: u32,
+    green_cubes: u32,
+    blue_cubes: u32,
 }
 
 fn parse_game_line(line: &str) -> Option<CubeGame> {
@@ -47,9 +47,9 @@ fn parse_game_line(line: &str) -> Option<CubeGame> {
 }
 
 fn parse_subset(subset: &str) -> Option<Subset> {
-    let mut red_cubes = 0;
-    let mut green_cubes = 0;
-    let mut blue_cubes = 0;
+    let mut red_cubes: u32 = 0;
+    let mut green_cubes: u32 = 0;
+    let mut blue_cubes: u32 = 0;
 
     for item in subset.split(',') {
         let parts: Vec<&str> = item.trim().split_whitespace().collect();
@@ -57,7 +57,7 @@ fn parse_subset(subset: &str) -> Option<Subset> {
             return None;
         }
 
-        let count: u16 = parts[0].parse().ok()?;
+        let count: u32 = parts[0].parse().ok()?;
         match parts[1] {
             "red"   => red_cubes    += count,
             "green" => green_cubes  += count,
@@ -112,4 +112,44 @@ pub fn run_part1() {
         }
         Err(e) => println!("Error: {}" ,e), 
     }
+}
+
+fn min_cubes_power(subsets: &Vec<Subset>) -> u32 {
+    let mut red_cubes   = 0;
+    let mut green_cubes = 0;
+    let mut blue_cubes  = 0;
+
+    for subset in subsets {
+        if subset.red_cubes > red_cubes {
+            red_cubes = subset.red_cubes;
+        }
+        if subset.green_cubes > green_cubes {
+            green_cubes = subset.green_cubes;
+        }
+        if subset.blue_cubes > blue_cubes {
+            blue_cubes = subset.blue_cubes;
+        }
+    }
+    return red_cubes * green_cubes * blue_cubes;
+}
+
+pub fn run_part2() {
+    println!("Running day 02 part 2 solution.");
+
+    match read_lines("input/day02.txt") {
+        Ok(lines) => {
+            let mut power_sum: u32 = 0;
+            for line in lines {
+                if let Some(cube_game) = parse_game_line(&line) {
+                    power_sum += min_cubes_power(&cube_game.subsets);
+                } else {
+                    println!("Failed to parse the line.");
+                }
+            }
+            println!("The power sum: {}", power_sum);
+        }
+        Err(e) => println!("Error: {}" ,e), 
+    }
+
+
 }

@@ -18,6 +18,7 @@ fn main() {
         ("1", "1") => day01::run_part1(),
         ("1", "2") => day01::run_part2(),
         ("2", "1") => day02::run_part1(),
+        ("2", "2") => day02::run_part2(),
         // Keep adding days
         _ => println!("Invalid day or part: {} {}", day, part),
     }
