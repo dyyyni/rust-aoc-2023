@@ -24,14 +24,23 @@ fn collect_adjacent_numbers(grid: &Vec<Vec<char>>, row: usize, col: usize) {
         (1, 1),
     ];
 
+    let left = (0, -1);
+    let right = (0, 1);
+
+    let mut adjacent_numbers: Vec<u32> = Vec::new();
+
     for &(d_row, d_col) in &directions {
+        let mut num_str = String::new();
         let new_row = row.wrapping_add(d_row as usize);
         let new_col = col.wrapping_add(d_col as usize);
 
         if new_row < grid.len() && new_col < grid[new_row].len() {
-            if grid[new_row][new_col].is_numeric() {
-                println!("{} is adjacent to {}", grid[new_row][new_col], grid[row][col]);
-        }
+            let c: char = grid[new_row][new_col];
+            if c.is_numeric() {
+                while c.is_numeric() {
+                    
+                }
+            }
         }
     }
 }
