@@ -8,6 +8,10 @@ fn parse_line(line: &str) -> Vec<char> {
     return row;
 }
 
+fn is_symbol(c: char) -> bool {
+    (c.is_ascii_punctuation() || c.is_ascii_graphic() && !c.is_alphanumeric()) && c != '.'
+}
+
 pub fn run_part1() {
     println!("Running day 03 part 1 solution.");
 
@@ -24,9 +28,11 @@ pub fn run_part1() {
         
     }
 
-    for row in &grid {
-        for &ch in row {
-            print!("{}", ch);
+
+    for row_index in 0..grid.len() {
+        for col_index in 0..grid[row_index].len() {
+            let c = grid[row_index][col_index];
+            println!("Is '{}' a symbol? {}", c, is_symbol(c))
         }
         println!();
     }
