@@ -12,6 +12,8 @@ fn is_symbol(c: char) -> bool {
     (c.is_ascii_punctuation() || c.is_ascii_graphic() && !c.is_alphanumeric()) && c != '.'
 }
 
+#[allow(unused_variables)]
+#[allow(unused_mut)]
 fn collect_adjacent_numbers(grid: &Vec<Vec<char>>, row: usize, col: usize) {
     let directions = [
         (-1, 0),
