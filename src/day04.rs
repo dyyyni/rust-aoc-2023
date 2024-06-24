@@ -13,9 +13,9 @@ fn parse_line(line: &str) -> (Vec<u32>, Vec<u32>) {
     winning_numbers.sort();
 
     let right_numbers = parts[1].split_whitespace();
-    let lottery_numbers: Vec<u32> = right_numbers.filter_map(|s| s.parse().ok()).collect(); 
+    let lottery_numbers: Vec<u32> = right_numbers.filter_map(|s| s.parse().ok()).collect();
 
-    return (winning_numbers, lottery_numbers);
+     return (winning_numbers, lottery_numbers);
 }
 
 pub fn run_part1() {
@@ -26,23 +26,19 @@ pub fn run_part1() {
             let mut point_total = 0;
 
             for line in lines {
-                let nums = parse_line(&line);
+                let (winning_numbers, lottery_numbers) = parse_line(&line);
 
-                let mut matches: Vec<u32> = Vec::new();
+                let matches: Vec<u32> = lottery_numbers
+                    .into_iter()
+                    .filter(|&number| winning_numbers.binary_search(&number).is_ok())
+                    .collect();
 
-                for number in nums.1 {
-                    match nums.0.binary_search(&number) {
-                        Ok(_) => matches.push(number),
-                        Err(_) => ()
-                    }
-                }
-                if matches.len() > 0 {
-                    point_total += 1 * (2_i32.pow((matches.len() - 1) as u32));
+                if !matches.is_empty() {
+                    point_total += 2_i32.pow((matches.len() - 1) as u32);
                 }
             }
             println!("Point total: {}", point_total);
-
         }
         Err(e) => println!("Error: {}", e),
-    } 
+    }
 }
