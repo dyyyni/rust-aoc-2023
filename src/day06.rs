@@ -33,6 +33,26 @@ fn parse_race_data(lines: Vec<String>) -> Vec<Race> {
     return races;
 }
 
+fn find_ways_to_win(race: &Race) -> u32 {
+    let mut count = 0;
+
+    for t in 1..race.time {
+        let speed = t;
+        let available_time = race.time - t;
+
+        if speed * available_time > race.distance {
+            count += 1;
+        }
+
+    }
+
+    return count;
+}
+
+fn multiply_elements(vec: &Vec<u32>) -> u32 {
+    vec.iter().fold(1, |acc, &x| acc * x)
+}
+
 pub fn run_part1() {
     println!("Running day 06 part 1 solution.");
 
@@ -40,9 +60,14 @@ pub fn run_part1() {
         Ok(lines) => {
             let lines: Vec<String> = lines.collect();
             let races = parse_race_data(lines);
+            let mut ways_to_win: Vec<u32> = Vec::new();
             for race in &races {
                 println!("{:?}", race);
+                ways_to_win.push(find_ways_to_win(race));
             }
+
+            println!("{:?}", ways_to_win);
+            println!("{}", multiply_elements(&ways_to_win));
         }
         Err(e) => println!("Error: {}", e),
     }
