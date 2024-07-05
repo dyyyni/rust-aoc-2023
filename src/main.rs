@@ -5,6 +5,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 
 use std::env;
 
@@ -27,6 +28,7 @@ fn main() {
         ("4", "1") => day04::run_part1(),
         ("5", "1") => day05::run_part1(),
         ("6", "1") => day06::run_part1(),
+        ("7", "1") => day07::run_part1(),
         // Keep adding days
         _ => println!("Invalid day or part: {} {}", day, part),
     }
