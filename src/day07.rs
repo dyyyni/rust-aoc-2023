@@ -29,7 +29,7 @@ enum HandType {
     FiveOfAkind,
 }
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq)]
 struct Hand {
     hand_type: HandType,
     cards: Vec<Cards>, 
@@ -64,6 +64,24 @@ impl Hand {
         }
     }
     
+}
+
+impl Ord for Hand {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.hand_type
+            .cmp(&other.hand_type)
+            .then_with(|| {
+                self.cards
+                    .iter()
+                    .cmp(other.cards.iter())  
+            })
+    }
+}
+
+impl PartialOrd for Hand {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 fn char_to_card(c: char) -> Cards {
@@ -102,14 +120,19 @@ pub fn run_part1() {
     match read_lines("input/day07.txt") {
         Ok(lines) => {
             let mut hands: Vec<Hand> = Vec::new();
+            let mut total_winnings = 0;
+            let mut rank = 1;
             
             for line in lines {
                 hands.push(parse_line_to_hand(&line));    
             }
             hands.sort();
             for hand in hands {
-                println!("{:?}", hand)
+                println!("{:?}", hand);
+                total_winnings += hand.bid * rank;
+                rank += 1;
             }
+            println!("The total winnings from the set: {}", total_winnings);
         }
         Err(e) => println!("Error : {}", e)
     }
