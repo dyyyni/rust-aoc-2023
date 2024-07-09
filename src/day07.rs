@@ -29,10 +29,11 @@ enum HandType {
     FiveOfAkind,
 }
 
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 struct Hand {
+    hand_type: HandType,
     cards: Vec<Cards>, 
     bid: u64,
-    hand_type: HandType,
 }
 
 impl Hand {
@@ -85,7 +86,7 @@ fn char_to_card(c: char) -> Cards {
     }
 }
 
-fn parse_hand(input: &str) -> Hand {
+fn parse_line_to_hand(input: &str) -> Hand {
     let parts: Vec<&str> = input.split_whitespace().collect();
     let cards_str = parts[0];
     let bid = parts[1].parse().expect("Invalid bid");
@@ -97,4 +98,19 @@ fn parse_hand(input: &str) -> Hand {
 
 pub fn run_part1() {
     println!("Running day07 part 1 solution.");
+
+    match read_lines("input/day07.txt") {
+        Ok(lines) => {
+            let mut hands: Vec<Hand> = Vec::new();
+            
+            for line in lines {
+                hands.push(parse_line_to_hand(&line));    
+            }
+            hands.sort();
+            for hand in hands {
+                println!("{:?}", hand)
+            }
+        }
+        Err(e) => println!("Error : {}", e)
+    }
 }
