@@ -1,6 +1,6 @@
 use crate::utils::read_lines;
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
 enum Cards {
     Two,
     Three,
@@ -17,16 +17,82 @@ enum Cards {
     Ace,
 }
 
+
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
+enum HandType {
+    HighCard,
+    OnePair,
+    TwoPair,
+    ThreeOfAKind,
+    FullHouse,
+    FourOfAKind,
+    FiveOfAkind,
+}
+
 struct Hand {
     cards: Vec<Cards>, 
     bid: u64,
+    hand_type: HandType,
 }
 
 impl Hand {
     fn new(cards: Vec<Cards>, bid: u64) -> Hand {
-        Hand { cards, bid }
+        let hand_type = Self::find_hand_type(&cards);  
+        Hand { cards, bid, hand_type }
+    }
+
+    fn find_hand_type(cards: &Vec<Cards>) -> HandType {
+        let mut counts = std::collections::HashMap::new();
+        for &card in cards {
+            *counts.entry(card).or_insert(0) += 1;
+        }
+
+        let mut values: Vec<&u32> = counts.values().collect();
+        values.sort();
+
+        match values.as_slice() {
+            [1, 1, 1, 1, 1] => HandType::HighCard,
+            [1, 1, 1, 2]    => HandType::OnePair,
+            [1, 2, 2]       => HandType::TwoPair,
+            [1, 1, 3]       => HandType::ThreeOfAKind,
+            [2, 3]          => HandType::FullHouse,
+            [1, 4]          => HandType::FourOfAKind,
+            [5]             => HandType::FiveOfAkind,
+            _               => panic!("Invalid hand"),
+
+        }
     }
     
+}
+
+fn char_to_card(c: char) -> Cards {
+    match c {
+        '2' => Cards::Two,
+        '3' => Cards::Three,
+        '4' => Cards::Four,
+        '5' => Cards::Five,
+        '6' => Cards::Six,
+        '7' => Cards::Seven,
+        '8' => Cards::Eight,
+        '9' => Cards::Nine,
+        'T' => Cards::Ten,
+        'J' => Cards::Jack,
+        'Q' => Cards::Queen,
+        'K' => Cards::King,
+        'A' => Cards::Ace,
+        _   => panic!("Invalid card character"),
+        
+    }
+}
+
+fn parse_hand(input: &str) -> Hand {
+    let parts: Vec<&str> = input.split_whitespace().collect();
+    let cards_str = parts[0];
+    let bid = parts[1].parse().expect("Invalid bid");
+
+    let cards: Vec<Cards> = cards_str.chars().map(char_to_card).collect();
+
+    Hand::new(cards, bid)
 }
 
 pub fn run_part1() {
