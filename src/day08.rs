@@ -64,9 +64,37 @@ fn parse_nodes(node_lines: &[String]) -> (Vec<Node>, HashMap<String, usize>) {
     (nodes, node_map)
 }
 
-fn navigation_steps(instructions: &Vec<Instruction>,
-     nodes: &Vec<Node>, node_map: &HashMap<String, usize>) -> u64 { 
-        todo!()
+fn navigation_steps(instructions: &Vec<Instruction>, nodes: &Vec<Node>) -> usize {
+    let mut steps = 0;
+    let mut current_node = &nodes[0];
+
+    loop {
+        if current_node.name == "ZZZ" {
+            break;
+        }
+        // Make the instructions repeat with the modulo
+        let instruction = &instructions[steps % instructions.len()];
+        steps += 1;
+
+        current_node = match instruction {
+            Instruction::Left => {
+                if let Some(left_index) = current_node.left {
+                    &nodes[left_index]
+                } else {
+                    panic!("No left node from {}", current_node.name);
+                }
+            }
+            Instruction::Right => {
+                if let Some(right_index) = current_node.right {
+                    &nodes[right_index]
+                } else {
+                    panic!("No right node from {}", current_node.name);
+                }
+            }
+        };
+    }
+
+    steps
 }
 
 pub fn run_part1() {
@@ -81,8 +109,8 @@ pub fn run_part1() {
             let node_lines = &lines[2..];
             let (nodes, node_map) = parse_nodes(node_lines);
 
-            let result = navigation_steps(&instructions, &nodes, &node_map);
-            println!("It takes {} to reach ZZZ.", result);
+            let result = navigation_steps(&instructions, &nodes);
+            println!("It takes {} steps to reach ZZZ.", result);
         }
         Err(e) => println!("Error: {}", e),
     }
