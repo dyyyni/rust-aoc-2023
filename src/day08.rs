@@ -64,9 +64,9 @@ fn parse_nodes(node_lines: &[String]) -> (Vec<Node>, HashMap<String, usize>) {
     (nodes, node_map)
 }
 
-fn navigation_steps(instructions: &Vec<Instruction>, nodes: &Vec<Node>) -> usize {
+fn navigation_steps(instructions: &Vec<Instruction>, nodes: &Vec<Node>, start_index: usize) -> usize {
     let mut steps = 0;
-    let mut current_node = &nodes[0];
+    let mut current_node = &nodes[start_index];
 
     loop {
         if current_node.name == "ZZZ" {
@@ -109,8 +109,12 @@ pub fn run_part1() {
             let node_lines = &lines[2..];
             let (nodes, node_map) = parse_nodes(node_lines);
 
-            let result = navigation_steps(&instructions, &nodes);
-            println!("It takes {} steps to reach ZZZ.", result);
+            if let Some(&start_index) = node_map.get("AAA") {
+                let result = navigation_steps(&instructions, &nodes, start_index);
+                println!("It takes {} steps to reach ZZZ.", result);
+            } else {
+                println!("Error: Start node AAA not found.");
+            }
         }
         Err(e) => println!("Error: {}", e),
     }
